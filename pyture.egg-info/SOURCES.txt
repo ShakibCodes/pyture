@@ -1,0 +1,12 @@
+LICENSE
+MANIFEST.in
+README.md
+pyproject.toml
+setup.cfg
+setup.py
+pyture/__init__.py
+pyture/capture.py
+pyture.egg-info/PKG-INFO
+pyture.egg-info/SOURCES.txt
+pyture.egg-info/dependency_links.txt
+pyture.egg-info/top_level.txt

@@ -1,0 +1,233 @@
+Metadata-Version: 2.4
+Name: pyture
+Version: 0.1.0
+Summary: A simple capture utility for logging variables in Python
+Home-page: https://github.com/YOUR_USERNAME/pyture
+Author: Shakib Sayyed
+License: MIT
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Dynamic: license-file
+
+
+# Pyture
+
+**A lightweight, developer-friendly tool for capturing runtime variables and exporting them in structured formats.**
+
+## Why Pyture?
+
+During development and debugging, a common challenge is effectively tracking the state of variables as your code executes. Traditional methods like numerous `print()` statements can clutter your code, and full-fledged debuggers can sometimes be too heavy for a quick inspection. Pyture offers a simple, non-intrusive solution.
+
+It's designed to seamlessly integrate into your workflow, allowing you to capture key data points at runtime. This data can then be saved to a structured format like JSON or CSV, providing a clean and organized snapshot of your application's state at specific moments for later analysis or reporting. It focuses on the developer's need for a straightforward way to log and export data without interrupting the program's flow.
+
+## Features
+
+-   **Runtime Variable Capture**: Easily capture variable names and their values using a simple `capture(**kwargs)` method.
+    
+-   **Flexible Save Formats**: Save captured data to **JSON** files with four distinct modes (`raw`, `timestamp`, `session`, `full`) to control the level of metadata.
+    
+-   **Dedicated CSV Export**: A separate `.export_csv()` method provides a flattened, spreadsheet-friendly output.
+    
+-   **Session Management**: Each run of your script is assigned a unique session ID and start time for easy grouping and tracking of data.
+    
+-   **Development Mode**: An optional "dev" mode provides real-time print feedback during capture and save operations.
+    
+-   **Data Management**: Load previous data from files or clear your current session's captures.
+    
+
+## Installation
+
+Install Pyture using pip:
+
+```
+pip install pyture
+
+```
+
+## Usage & Code Examples
+
+Pyture is managed through the `Pyture` class. Here are examples of its core functionality.
+
+### Basic Capture & Save
+
+This example demonstrates how to capture data and save it in the default "full" mode.
+
+```python
+from pyture import Pyture
+
+# Initialize the capture manager
+cap = Pyture()
+
+# Capture some variables
+user_id = 101
+request_path = '/api/data'
+cap.capture(user_id=user_id, request_path=request_path)
+
+# Capture more data later in the code
+response_code = 200
+status = 'success'
+cap.capture(response_code=response_code, status=status)
+
+# Save the captured data to a JSON file (default mode is 'full')
+cap.save('full_output.json')
+
+```
+
+### Saving with Different Modes
+
+The `.save()` method allows you to specify a mode for the output JSON.
+
+```python
+from pyture import Pyture
+
+cap = Pyture()
+cap.capture(username='john_doe', role='admin')
+cap.capture(is_authenticated=True)
+
+# Save only the captured data (no metadata)
+cap.save('raw_output.json', mode='raw')
+
+# Save with only the timestamp
+cap.save('timestamp_output.json', mode='timestamp')
+
+# Save with only the session ID
+cap.save('session_output.json', mode='session')
+
+# Save with all metadata (timestamp, session_id, and data)
+cap.save('full_output.json', mode='full')
+
+```
+
+### Exporting to CSV
+
+Use the `.export_csv()` method to save your data in a flattened CSV format. This is especially useful for analysis in spreadsheet applications.
+
+```python
+from pyture import Pyture
+
+cap = Pyture()
+cap.capture(event='user_login', user_id=123)
+cap.capture(event='purchase', product_id=987, amount=45.99)
+
+cap.export_csv('capture_log.csv')
+
+```
+
+## API Reference
+
+### `class Pyture(mode="normal")`
+
+Initializes the `Pyture` object.
+
+-   **`mode`** (str): The operational mode of the manager.
+    
+    -   `"normal"` (default): Operates silently without printing messages.
+        
+    -   `"dev"`: Prints status messages to the console for each capture, save, and clear operation.
+        
+
+### `Pyture.capture(**kwargs)`
+
+Captures a set of variables from the current runtime state. This method accepts any number of keyword arguments, where the key is the variable name and the value is its data.
+
+-   **`**kwargs`**: Key-value pairs representing the variable name and its data.
+    
+
+### `Pyture.save(filename, mode="full")`
+
+Saves the captured data to a **JSON** file.
+
+-   **`filename`** (str): The name of the file to save to (e.g., `'output.json'`).
+    
+-   **`mode`** (str): The format of the output.
+    
+    -   `"raw"`: Saves only the captured data.
+        
+    -   `"timestamp"`: Saves data with its capture timestamp.
+        
+    -   `"session"`: Saves data with its session ID.
+        
+    -   `"full"` (default): Saves data with all available metadata (timestamp and session ID).
+        
+
+### `Pyture.export_csv(filename)`
+
+Exports the captured data to a **CSV** file. The output is flattened, with metadata (`timestamp`, `session_id`) and all captured variable keys as columns.
+
+-   **`filename`** (str): The name of the file to export to (e.g., `'output.csv'`).
+    
+
+### `Pyture.load(filename)`
+
+Loads captured data from a JSON file into the manager's buffer.
+
+-   **`filename`** (str): The path to the file to load.
+    
+
+### `Pyture.clear()`
+
+Resets the internal data store, clearing all captured data from the current session.
+
+### `Pyture.get_session_info()`
+
+Returns a dictionary containing information about the current session, including the unique `session_id`, `started_at` timestamp, and the number of captures.
+
+## Example Output
+
+### JSON Preview
+
+This is an example of a JSON file saved using `mode='full'`.
+
+```json
+[
+{
+    "timestamp": "2025-08-04T17:37:54.000Z",
+    "session_id": "a1b2c3d4-e5f6-g7h8-i9j0-k1l2m3n4o5p6",
+    "data": {
+    "user_id": 101,
+    "request_path": "/api/data"
+    }
+},
+{
+    "timestamp": "2025-08-04T17:37:54.001Z",
+    "session_id": "a1b2c3d4-e5f6-g7h8-i9j0-k1l2m3n4o5p6",
+    "data": {
+    "response_code": 200,
+    "status": "success"
+    }
+}
+]
+
+```
+
+### CSV Preview
+
+This is an example of a CSV file exported using `.export_csv()`. Note how all keys are flattened into columns.
+
+```
+timestamp,session_id,amount,event,product_id,user_id
+2025-08-04T17:37:54.000Z,a1b2c3d4-e5f6-g7h8-i9j0-k1l2m3n4o5p6,,user_login,,123
+2025-08-04T17:37:54.001Z,a1b2c3d4-e5f6-g7h8-i9j0-k1l2m3n4o5p6,45.99,purchase,987,
+
+```
+
+## Contributing
+
+We welcome contributions to Pyture! To contribute, please follow these steps:
+
+1.  **Fork the repository**.
+    
+2.  Create a new branch for your feature or bug fix.
+    
+3.  Implement your changes and ensure tests pass.
+    
+4.  Submit a pull request with a clear description of your changes.
+    
+
+## License
+
+Pyture is released under the **MIT License**. For more information, see the [LICENSE](https://www.google.com/search?q=LICENSE "null") file.
