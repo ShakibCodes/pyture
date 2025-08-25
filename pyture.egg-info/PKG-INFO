@@ -1,8 +1,8 @@
 Metadata-Version: 2.4
 Name: pyture
-Version: 0.1.0
+Version: 0.1.1
 Summary: A simple capture utility for logging variables in Python
-Home-page: https://github.com/YOUR_USERNAME/pyture
+Home-page: https://github.com/ShakibCodes/pyture
 Author: Shakib Sayyed
 License: MIT
 Classifier: Programming Language :: Python :: 3
